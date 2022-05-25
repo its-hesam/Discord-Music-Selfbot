@@ -1,0 +1,12 @@
+{
+    "token":"Put Token Here",
+    "prefix":"!",
+
+    "nodes":[
+        {
+            "host": "lavalink.darrenofficial.com",
+            "port": 80,
+            "password": "hisudhan"
+          }
+    ]
+}
