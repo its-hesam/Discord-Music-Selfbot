@@ -1,6 +1,6 @@
 module.exports = {
-	name: 'skip',
-	description: 'Skip Music!',
+	name: 'pause',
+	description: 'Pause Music!',
     player: true,
     inVoiceChannel: true,
     sameVoiceChannel: true,
@@ -8,12 +8,13 @@ module.exports = {
 	async execute(message) 
     {
         const player = message.client.manager.get(message.guild.id);
-        player.stop();
-		message.reply({content : `Music Skiped!`}).then(msg =>
+       message.reply({content : `Pause Enabled!`}).then(msg =>
             { 
             setTimeout(() => { 
                 msg.delete() 
             }, 1000)
             });
+            if (!player.paused) return player.pause(true);
+            return player.pause(false);
 	},
 };

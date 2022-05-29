@@ -4,6 +4,7 @@ const {token} = require('../config.json')
 module.exports = {
 	name: 'invite',
 	description: 'Invite SelfBot!',
+    owner: true,
 	async execute(message, args) 
     {
         try
@@ -12,9 +13,11 @@ module.exports = {
             if (InviteCode.includes("http"))
             {
                 message.reply(`Please just give me the  INVITE_CODE. `).then(msg =>
-                    { 
-                    setTimeout(() => { msg.delete() }, 1000)
-                    });
+            { 
+            setTimeout(() => { 
+                msg.delete() 
+            }, 1000)
+            });
             }
             else
             {
@@ -34,7 +37,9 @@ module.exports = {
                     {
                         await message.reply(`I joined the **${ Response.data.guild.name } (${ Response.data.guild.id })** server.`).then(msg =>
                             { 
-                            setTimeout(() => { msg.delete() }, 1000)
+                            setTimeout(() => { 
+                                msg.delete() 
+                            }, 1000)
                             });
                     })
                     .catch((Error) =>

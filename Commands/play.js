@@ -1,13 +1,11 @@
 module.exports = {
 	name: 'play',
 	description: 'Play Music!',
+    inVoiceChannel: true,
+    sameVoiceChannel: true,
+    owner: true,
     async execute(message,args) 
     {
-        if (!message.member.voice.channel) return message.channel.send({ content: "**You are not on a voice channel!**" }).then(msg =>
-            { 
-            setTimeout(() => { msg.delete() }, 1000)
-            });
-
         const player = await message.client.manager.create({
             guild: message.guild.id,
             voiceChannel: message.member.voice.channel.id,
@@ -23,7 +21,9 @@ module.exports = {
             case "NO_RESULTS":
                 message.channel.send({ content: "There are no results found.!" }).then(msg =>
                     { 
-                    setTimeout(() => { msg.delete() }, 1000)
+                    setTimeout(() => { 
+                        msg.delete() 
+                    }, 1000)
                     });
             break;
 
@@ -31,7 +31,9 @@ module.exports = {
                 player.queue.add(resolve.tracks[0]);
                 message.channel.send({ content: `Added: \`${resolve.tracks[0].title}\`` }).then(msg =>
                     { 
-                    setTimeout(() => { msg.delete() }, 1000)
+                    setTimeout(() => { 
+                        msg.delete() 
+                    }, 1000)
                     });
                 if (!player.playing && !player.paused) return player.play();
             break;
@@ -40,7 +42,9 @@ module.exports = {
                 player.queue.add(resolve.tracks);
                 message.channel.send({ content: `Added: \`${resolve.tracks.length / 2}\`` }).then(msg =>
                     { 
-                    setTimeout(() => { msg.delete() }, 1000)
+                    setTimeout(() => { 
+                        msg.delete() 
+                    }, 1000)
                     });
                 if (!player.playing && !player.paused) return player.play();
             break;
@@ -49,7 +53,9 @@ module.exports = {
                 player.queue.add(resolve.tracks[0]);
                 message.channel.send({ content: `Added: ${resolve.tracks[0].title}` }).then(msg =>
                     { 
-                    setTimeout(() => { msg.delete() }, 1000)
+                    setTimeout(() => { 
+                        msg.delete() 
+                    }, 1000)
                     });
                 if (!player.playing) return player.play();
             break;
