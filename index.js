@@ -3,19 +3,19 @@ const {
        Collection
       } = require('discord.js-selfbot-v13');
 const client = new Client();
+const fs = require('fs')
 const {
      SpringManager 
       } = require("springlink");
-const {
-     token ,
-     prefix ,
-     nodes ,
-    } = require('./config.json')
-const fs = require('fs')
+const { token,
+        ownerid,
+        nodes,
+     } = require('./config.json')
+    if (!token || !ownerid) {
+        console.log('Please Fill Out Config file')
+        process.exit()
+      }
 
-
-let played = false;
-let qsize = 1;
 client.manager = new SpringManager(client, nodes, {
     sendWS: (data) => {
         const guild = client.guilds.cache.get(data.d.guild_id);
@@ -28,29 +28,18 @@ client.manager.on("nodeConnect", (node) => {
 });
 
 client.manager.on("trackStart", (player, track) => {
-    if (!played && Array.isArray(track)) {
-        played = true;
-        return player.textChannel.send(`Now playing \`${track[0].title}\``).then(msg =>
-            { 
-            setTimeout(() => { msg.delete() }, 1000)
-            });
-    }
-    return player.textChannel.send(`Now playing \`${Array.isArray(track) ? track[qsize++].title : track.title}\``).then(msg =>
+    return player.textChannel.send(`Now playing \`${track.title}\``).then(msg =>
         { 
         setTimeout(() => { msg.delete() }, 1000)
         });
 });
-client.manager.on("queueEnd", (player) => {
+
+client.manager.on("trackEnd", (player) => {
     player.destroy()
-    player.textChannel.send(`Queue End!`).then(msg =>
+    player.textChannel.send(`Track End!`).then(msg =>
         { 
         setTimeout(() => { msg.delete() }, 1000)
         });
-});
-
-
-client.on("raw", (packet) => {
-    client.manager.packetUpdate(packet);
 });
 
 
@@ -67,20 +56,6 @@ fs.readdirSync("./events/Client/").forEach(file => {
     client.on(event.name, (...args) => event.execute(client, ...args));
 });
 
-
-client.on('messageCreate', message => {
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
-	const args = message.content.slice(prefix.length).trim().split(/ +/);
-
-	const command = args.shift().toLowerCase();
-    
-	if (!client.commands.has(command)) return;
-	try {
-		client.commands.get(command).execute(message, args);
-	} catch (error) {
-		console.error(error);
-	}
-});
 
 process.on("unhandledRejection", (reason, promise) => {
   try {
