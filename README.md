@@ -34,6 +34,7 @@ Run the robot `node index.js` then using
 {
     "token":"Put Token Here",
     "prefix":"!",
+    "ownerid: ["Put OwnerId Here"],
 
     "nodes":[
         {
