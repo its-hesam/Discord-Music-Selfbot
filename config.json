@@ -1,7 +1,7 @@
 {
     "token":"Put Token Here",
     "prefix":"!",
-
+    "ownerid":["Put OwnerId Here"], 
     "nodes":[
         {
             "host": "lavalink.darrenofficial.com",
