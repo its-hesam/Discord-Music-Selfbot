@@ -1,10 +1,14 @@
 {
   "dependencies": {
     "axios": "^0.27.2",
+     "express": "^4.18.1",
     "discord.js-selfbot-v13": "^2.0.4",
     "fs": "^0.0.1-security",
     "springlink": "^1.0.1"
   },
+   "devDependencies": {
+    "node": "^16.0.0"
+  }
   "name": "m-selfbot",
   "version": "1.0.0",
   "main": "index.js",
