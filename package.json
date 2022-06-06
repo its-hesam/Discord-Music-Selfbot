@@ -8,7 +8,7 @@
   },
    "devDependencies": {
     "node": "^16.0.0"
-  }
+  },
   "name": "m-selfbot",
   "version": "1.0.0",
   "main": "index.js",
