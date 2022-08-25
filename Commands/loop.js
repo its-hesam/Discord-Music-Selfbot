@@ -14,6 +14,6 @@ module.exports = {
             msg.delete() 
         }, 1000)
         });
-        return player.setQueueRepeat()
+        return player.queueRepeat()
 	},
 };

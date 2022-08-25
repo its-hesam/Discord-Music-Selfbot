@@ -13,7 +13,7 @@ module.exports = {
         const command = client.commands.get(commandName) ||  client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
         if (!command) return;
     
-        if (command.owner && !message.author.id.includes(ownerid)) {
+        if (command.owner && !ownerid.includes(message.author.id)) {
             return message.reply(`**❌ | You cant use this command!**`).then(msg =>
                 { 
                 setTimeout(() => { 

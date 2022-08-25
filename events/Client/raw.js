@@ -1,7 +1,7 @@
 module.exports = {
     name: "raw",
-     async execute(client, packet) 
+     async execute(client, data) 
      {
-        client.manager.packetUpdate(packet);
+      client.manager.updateVoiceState(data);
     }
   };

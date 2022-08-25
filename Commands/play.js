@@ -1,65 +1,88 @@
 module.exports = {
 	name: 'play',
+    aliases: ['p'],
 	description: 'Play Music!',
     inVoiceChannel: true,
     sameVoiceChannel: true,
     owner: true,
     async execute(message,args) 
     {
-        const player = await message.client.manager.create({
-            guild: message.guild.id,
-            voiceChannel: message.member.voice.channel.id,
-            textChannel: message.channel,
-            selfDeaf: true,
-            selfMute: false,
-        });
-
-        const SearchMusic =  args.join(" ");
-        const resolve = await message.client.manager.resolveTrack(SearchMusic);
-
-        switch (resolve.loadType) {
-            case "NO_RESULTS":
-                message.channel.send({ content: "There are no results found.!" }).then(msg =>
-                    { 
-                    setTimeout(() => { 
-                        msg.delete() 
-                    }, 1000)
-                    });
-            break;
-
-            case "TRACK_LOADED":
-                player.queue.add(resolve.tracks[0]);
-                message.channel.send({ content: `Added: \`${resolve.tracks[0].title}\`` }).then(msg =>
-                    { 
-                    setTimeout(() => { 
-                        msg.delete() 
-                    }, 1000)
-                    });
-                if (!player.playing && !player.paused) return player.play();
-            break;
-
-            case "PLAYLIST_LOADED":
-                player.queue.add(resolve.tracks);
-                message.channel.send({ content: `Added: \`${resolve.tracks.length / 2}\`` }).then(msg =>
-                    { 
-                    setTimeout(() => { 
-                        msg.delete() 
-                    }, 1000)
-                    });
-                if (!player.playing && !player.paused) return player.play();
-            break;
-
-            case "SEARCH_RESULT":
-                player.queue.add(resolve.tracks[0]);
-                message.channel.send({ content: `Added: ${resolve.tracks[0].title}` }).then(msg =>
-                    { 
-                    setTimeout(() => { 
-                        msg.delete() 
-                    }, 1000)
-                    });
-                if (!player.playing) return player.play();
-            break;
+      const player = message.client.manager.create({
+        guild: message.guild.id,
+        voiceChannel: message.member.voice.channel.id,
+        textChannel: message.channel.id,
+        selfDeafen: true,
+        volume: 80,
+      });
+  
+      if (player.state != "CONNECTED") await player.connect();
+      const search = args.join(' ');
+      let res;
+      try {
+        res = await player.search(search, message.author);
+        if (!player)
+          return message.reply({ content: `**❌ | There is no music playing.**` }).then(msg =>
+            { 
+            setTimeout(() => { 
+                msg.delete() 
+            }, 1000)
+            });
+        if (res.loadType === 'LOAD_FAILED') {
+          if (!player.queue.current) player.destroy();
+          throw res.exception;
         }
-        return null;
-	},
-};
+      } catch (err) {
+        return message.reply(`**❌ | there was an error while searching.**`).then(msg =>
+          { 
+          setTimeout(() => { 
+              msg.delete() 
+          }, 1000)
+          });
+      }
+      switch (res.loadType) {
+        case 'NO_MATCHES':
+          if (!player.queue.current) player.destroy();
+          return message.channel.send({ content: `**❌ | No matches found for - ${search}**` }).then(msg =>
+            { 
+            setTimeout(() => { 
+                msg.delete() 
+            }, 1000)
+            });
+        case 'TRACK_LOADED':
+          var track = res.tracks[0];
+          player.queue.add(track);
+          if (!player.playing && !player.paused && !player.queue.size) {
+            return player.play();
+          } else {
+            return message.reply({ content: `✅ |  **Added song to queue**\n[${track.title}]` }).then(msg =>
+              { 
+              setTimeout(() => { 
+                  msg.delete() 
+              }, 1000)
+              });
+          }
+        case 'PLAYLIST_LOADED':
+          player.queue.add(res.tracks);
+          if (!player.playing && !player.paused && player.queue.totalSize === res.tracks.length) player.play();
+          return message.reply({ content: `✅ | **Added playlist to queue**\n${res.tracks.length} Songs [${res.playlist.name}](${search})` }).then(msg =>
+            { 
+            setTimeout(() => { 
+                msg.delete() 
+            }, 1000)
+            });
+        case 'SEARCH_RESULT':
+          var track = res.tracks[0];
+          player.queue.add(track);
+          if (!player.playing && !player.paused && !player.queue.size) {
+            return player.play();
+          } else {
+            return message.reply({ content: `✅ |  **Added song to queue**\n[${track.title}]` }).then(msg =>
+              { 
+              setTimeout(() => { 
+                  msg.delete() 
+              }, 1000)
+              });
+          }
+      }
+    }
+  }

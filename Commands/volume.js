@@ -1,5 +1,6 @@
 module.exports = {
-	name: 'volume',
+	name: 'volume', 
+    aliases:['v'],
 	description: 'Set Music Volume!',
     player: true,
     inVoiceChannel: true,
