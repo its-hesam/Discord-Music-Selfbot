@@ -32,15 +32,18 @@ Run the robot `node index.js` then using
 
 ```json
 {
-    "token":"Put Token Here",
-    "prefix":"!",
-    "ownerid: ["Put OwnerId Here"],
-
+     "token":"",
+    "prefix":"put prefix",
+    "ownerid":["Owner Id"], 
+    "SpotifyID":"", 
+    "SpotifySecret":"", 
     "nodes":[
         {
-            "host": "lavalink.darrenofficial.com",
-            "port": 80,
-            "password": "hisudhan"
+        "host": "lavalink.darrenofficial.com",
+        "identifier": "Main",
+        "port": 80,
+        "password": "hisudhan",
+        "secure": true
           }
     ]
 }
